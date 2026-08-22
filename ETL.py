@@ -1,15 +1,19 @@
-from email.utils import parseaddr, parsedate_to_datetime
 import base64
 import pandas as pd
 import pyodbc
+import os
+import sys
+
+
+
+from email.utils import parseaddr, parsedate_to_datetime
 from datetime import datetime
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-
-import os
-import sys
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 credentials_path = os.path.join(BASE_DIR, "credentials.json")
@@ -25,11 +29,12 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 def conectar_sql():
 
     conn = pyodbc.connect(
-        "DRIVER={SQL Server};"
-        "SERVER=LAPTOP-DR8C1BKS\\MSSQLSERVER01;"
-        "DATABASE=Pipeline_gmail;"
+        f"DRIVER={{{os.getenv('SQL_DRIVER')}}};"
+        f"SERVER={os.getenv('SQL_SERVER')};"
+        f"DATABASE={os.getenv('SQL_DATABASE')};"
         "Trusted_Connection=yes;"
     )
+
 
     return conn
 
